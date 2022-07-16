@@ -6,7 +6,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   defaultReleaseBranch: 'main',
   name: '@wheatstalk/cdk-sns-log-group-subscription',
   description: 'An AWS CDK Construct that subscribes a CloudWatch LogGroup to an SNS Topic',
-  repositoryUrl: 'https://github.com/joshkellendonk/cdk-sns-logs.git',
+  repositoryUrl: 'https://github.com/wheatstalk/cdk-sns-log-group-subscription.git',
 
   releaseToNpm: true,
   npmAccess: javascript.NpmAccess.PUBLIC,

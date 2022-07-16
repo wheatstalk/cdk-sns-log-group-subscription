@@ -3,7 +3,7 @@
   "description": "An AWS CDK Construct that subscribes a CloudWatch LogGroup to an SNS Topic",
   "repository": {
     "type": "git",
-    "url": "https://github.com/joshkellendonk/cdk-sns-logs.git"
+    "url": "https://github.com/wheatstalk/cdk-sns-log-group-subscription.git"
   },
   "scripts": {
     "build": "npx projen build",
