@@ -1,5 +1,6 @@
 {
-  "name": "cdk-sns-logs",
+  "name": "@wheatstalk/cdk-sns-log-group-subscription",
+  "description": "An AWS CDK Construct that subscribes a CloudWatch LogGroup to an SNS Topic",
   "repository": {
     "type": "git",
     "url": "https://github.com/joshkellendonk/cdk-sns-logs.git"
@@ -7,6 +8,9 @@
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
+    "bundle": "npx projen bundle",
+    "bundle:log.lambda": "npx projen bundle:log.lambda",
+    "bundle:log.lambda:watch": "npx projen bundle:log.lambda:watch",
     "clobber": "npx projen clobber",
     "compat": "npx projen compat",
     "compile": "npx projen compile",
@@ -14,6 +18,12 @@
     "docgen": "npx projen docgen",
     "eject": "npx projen eject",
     "eslint": "npx projen eslint",
+    "integ:log-group-subscription:assert": "npx projen integ:log-group-subscription:assert",
+    "integ:log-group-subscription:deploy": "npx projen integ:log-group-subscription:deploy",
+    "integ:log-group-subscription:destroy": "npx projen integ:log-group-subscription:destroy",
+    "integ:log-group-subscription:snapshot": "npx projen integ:log-group-subscription:snapshot",
+    "integ:log-group-subscription:watch": "npx projen integ:log-group-subscription:watch",
+    "integ:snapshot-all": "npx projen integ:snapshot-all",
     "package": "npx projen package",
     "package-all": "npx projen package-all",
     "package:js": "npx projen package:js",
@@ -35,12 +45,16 @@
     "organization": false
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.101",
     "@types/jest": "^27",
     "@types/node": "^14",
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",
+    "aws-cdk": "^2",
     "aws-cdk-lib": "2.1.0",
+    "aws-sdk": "^2.1176.0",
     "constructs": "10.0.5",
+    "esbuild": "^0.14.49",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-import-resolver-typescript": "^3.2.6",
@@ -56,6 +70,7 @@
     "projen": "^0.58.31",
     "standard-version": "^9",
     "ts-jest": "^27",
+    "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
@@ -67,6 +82,9 @@
   ],
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "jest": {
     "testMatch": [

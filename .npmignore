@@ -21,3 +21,6 @@ dist
 tsconfig.tsbuildinfo
 /.eslintrc.json
 !.jsii
+test/.tmp
+test/log-group-subscription.integ.snapshot
+!/assets/

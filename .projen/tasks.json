@@ -41,6 +41,33 @@
       ],
       "condition": "! git log --oneline -1 | grep -q \"chore(release):\""
     },
+    "bundle": {
+      "name": "bundle",
+      "description": "Prepare assets",
+      "steps": [
+        {
+          "spawn": "bundle:log.lambda"
+        }
+      ]
+    },
+    "bundle:log.lambda": {
+      "name": "bundle:log.lambda",
+      "description": "Create a JavaScript bundle from src/log.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/log.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/log.lambda/index.js\" --external:aws-sdk"
+        }
+      ]
+    },
+    "bundle:log.lambda:watch": {
+      "name": "bundle:log.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/log.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/log.lambda.ts --target=\"node14\" --platform=\"node\" --outfile=\"assets/log.lambda/index.js\" --external:aws-sdk --watch"
+        }
+      ]
+    },
     "clobber": {
       "name": "clobber",
       "description": "hard resets to HEAD of origin and cleans the local repo",
@@ -130,6 +157,78 @@
         }
       ]
     },
+    "integ:log-group-subscription:assert": {
+      "name": "integ:log-group-subscription:assert",
+      "description": "assert the snapshot of integration test 'log-group-subscription'",
+      "steps": [
+        {
+          "exec": "[ -d \"test/log-group-subscription.integ.snapshot\" ] || (echo \"No snapshot available for integration test 'log-group-subscription'. Run 'projen integ:log-group-subscription:deploy' to capture.\" && exit 1)"
+        },
+        {
+          "exec": "cdk synth --app \"ts-node -P tsconfig.dev.json test/log-group-subscription.integ.ts\" --no-version-reporting --no-asset-metadata --no-path-metadata -o test/.tmp/log-group-subscription.integ/assert.cdk.out > /dev/null"
+        },
+        {
+          "exec": "diff -r -x asset.* -x cdk.out -x manifest.json -x tree.json test/log-group-subscription.integ.snapshot/ test/.tmp/log-group-subscription.integ/assert.cdk.out/"
+        }
+      ]
+    },
+    "integ:log-group-subscription:deploy": {
+      "name": "integ:log-group-subscription:deploy",
+      "description": "deploy integration test 'log-group-subscription' and capture snapshot",
+      "steps": [
+        {
+          "exec": "rm -fr test/.tmp/log-group-subscription.integ/deploy.cdk.out"
+        },
+        {
+          "exec": "cdk deploy --app \"ts-node -P tsconfig.dev.json test/log-group-subscription.integ.ts\" --no-version-reporting --no-asset-metadata --no-path-metadata '**' --require-approval=never -o test/.tmp/log-group-subscription.integ/deploy.cdk.out"
+        },
+        {
+          "exec": "rm -fr test/log-group-subscription.integ.snapshot"
+        },
+        {
+          "exec": "mv test/.tmp/log-group-subscription.integ/deploy.cdk.out test/log-group-subscription.integ.snapshot"
+        },
+        {
+          "spawn": "integ:log-group-subscription:destroy"
+        }
+      ]
+    },
+    "integ:log-group-subscription:destroy": {
+      "name": "integ:log-group-subscription:destroy",
+      "description": "destroy integration test 'log-group-subscription'",
+      "steps": [
+        {
+          "exec": "cdk destroy --app test/log-group-subscription.integ.snapshot '**' --no-version-reporting"
+        }
+      ]
+    },
+    "integ:log-group-subscription:snapshot": {
+      "name": "integ:log-group-subscription:snapshot",
+      "description": "update snapshot for integration test \"log-group-subscription\"",
+      "steps": [
+        {
+          "exec": "cdk synth --app \"ts-node -P tsconfig.dev.json test/log-group-subscription.integ.ts\" --no-version-reporting --no-asset-metadata --no-path-metadata -o test/log-group-subscription.integ.snapshot > /dev/null"
+        }
+      ]
+    },
+    "integ:log-group-subscription:watch": {
+      "name": "integ:log-group-subscription:watch",
+      "description": "watch integration test 'log-group-subscription' (without updating snapshots)",
+      "steps": [
+        {
+          "exec": "cdk watch --app \"ts-node -P tsconfig.dev.json test/log-group-subscription.integ.ts\" --no-version-reporting --no-asset-metadata --no-path-metadata '**' -o test/.tmp/log-group-subscription.integ/deploy.cdk.out"
+        }
+      ]
+    },
+    "integ:snapshot-all": {
+      "name": "integ:snapshot-all",
+      "description": "update snapshot for all integration tests",
+      "steps": [
+        {
+          "spawn": "integ:log-group-subscription:snapshot"
+        }
+      ]
+    },
     "package": {
       "name": "package",
       "description": "Creates the distribution package",
@@ -172,7 +271,12 @@
     },
     "pre-compile": {
       "name": "pre-compile",
-      "description": "Prepare the project for compilation"
+      "description": "Prepare the project for compilation",
+      "steps": [
+        {
+          "spawn": "bundle"
+        }
+      ]
     },
     "release": {
       "name": "release",
@@ -207,6 +311,9 @@
         },
         {
           "spawn": "eslint"
+        },
+        {
+          "spawn": "integ:log-group-subscription:assert"
         }
       ]
     },

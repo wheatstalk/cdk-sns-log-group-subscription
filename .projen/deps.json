@@ -1,6 +1,10 @@
 {
   "dependencies": [
     {
+      "name": "@types/aws-lambda",
+      "type": "build"
+    },
+    {
       "name": "@types/jest",
       "version": "^27",
       "type": "build"
@@ -26,8 +30,21 @@
       "type": "build"
     },
     {
+      "name": "aws-cdk",
+      "version": "^2",
+      "type": "build"
+    },
+    {
+      "name": "aws-sdk",
+      "type": "build"
+    },
+    {
       "name": "constructs",
       "version": "10.0.5",
+      "type": "build"
+    },
+    {
+      "name": "esbuild",
       "type": "build"
     },
     {
@@ -94,6 +111,10 @@
     {
       "name": "ts-jest",
       "version": "^27",
+      "type": "build"
+    },
+    {
+      "name": "ts-node",
       "type": "build"
     },
     {
