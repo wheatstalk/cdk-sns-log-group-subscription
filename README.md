@@ -1,6 +1,6 @@
-# SNS Topic Log Group Subscription
+# SNS Log Group Subscription
 
-This AWS CDK construct library provides a `LogGroupSubscription`, which
+This AWS CDK construct library provides `LogGroupSubscription`, which
 subscribes a CloudWatch LogGroup to an SNS topic. Uses for this construct
 might include:
 
