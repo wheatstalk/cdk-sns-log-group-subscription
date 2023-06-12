@@ -1,3 +1,5 @@
+> This repository has moved to https://github.com/wheatstalk/tools/tree/main/packages/cdk-sns-log-group-subscription
+
 # SNS Log Group Subscription
 
 This AWS CDK construct library provides `LogGroupSubscription`, which
